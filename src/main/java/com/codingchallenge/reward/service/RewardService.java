@@ -33,7 +33,7 @@ public class RewardService {
         List<TransactionInfo> lastMonthTransactions = transactionInfoRepository.findTransactionsForMonth(customerId, lastMonthDateTime.getYear(), lastMonthDateTime.getMonthValue());
 
         //Get all transactions of the month before last month
-        LocalDateTime monthBeforeLastMonthDateTime = presentDateTime.minusMonths(1);
+        LocalDateTime monthBeforeLastMonthDateTime = lastMonthDateTime.minusMonths(1);
         List<TransactionInfo> monthBeforeLastMonthTransactions = transactionInfoRepository.findTransactionsForMonth(customerId, monthBeforeLastMonthDateTime.getYear(), monthBeforeLastMonthDateTime.getMonthValue());
 
         Long presentMonthRewardPoints = calculateRewardsForTransactions(presentMonthTransactions);
@@ -55,7 +55,7 @@ public class RewardService {
         double amount = txn.getAmount();
         if (amount > ABOVE_50_BELOW_100 && amount < OVER_1OO)
             return Math.round(amount - ABOVE_50_BELOW_100) * ABOVE_50_BELOW_100_POINTS;
-        else if (amount > OVER_1OO)
+        else if (amount >= OVER_1OO)
             return Math.round(amount - OVER_1OO) * OVER_1OO_POINTS
                     + (OVER_1OO - ABOVE_50_BELOW_100) * ABOVE_50_BELOW_100_POINTS;
         else
